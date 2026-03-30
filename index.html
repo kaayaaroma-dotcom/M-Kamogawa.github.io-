@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>休暇届提出ポータル</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=DM+Serif+Display&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f5f3ef;
+    --surface: #ffffff;
+    --accent: #2d6a4f;
+    --accent-light: #e8f4ee;
+    --accent-mid: #52b788;
+    --text-primary: #1a1a1a;
+    --text-secondary: #6b7280;
+    --text-muted: #9ca3af;
+    --border: #e5e1d8;
+    --shadow: 0 2px 12px rgba(0,0,0,0.06);
+    --shadow-hover: 0 8px 30px rgba(45,106,79,0.15);
+    --radius: 14px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Noto Sans JP', sans-serif;
+    background: var(--bg);
+    color: var(--text-primary);
+    min-height: 100vh;
+    padding: 0 0 60px;
+  }
+
+  /* ヘッダー */
+  header {
+    background: var(--accent);
+    padding: 36px 40px 30px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  header::before {
+    content: '';
+    position: absolute;
+    top: -60px; right: -60px;
+    width: 220px; height: 220px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.06);
+  }
+
+  header::after {
+    content: '';
+    position: absolute;
+    bottom: -40px; left: 30%;
+    width: 140px; height: 140px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.04);
+  }
+
+  .header-inner {
+    max-width: 860px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+  }
+
+  .header-label {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    color: rgba(255,255,255,0.6);
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  header h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 28px;
+    color: #ffffff;
+    font-weight: 400;
+    letter-spacing: 0.02em;
+    margin-bottom: 6px;
+  }
+
+  .header-sub {
+    font-size: 13px;
+    color: rgba(255,255,255,0.65);
+    font-weight: 300;
+  }
+
+  /* メインコンテンツ */
+  .container {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 36px 20px 0;
+  }
+
+  /* セクションタイトル */
+  .section-title {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .section-title::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  /* 使い方説明 */
+  .how-to {
+    background: var(--surface);
+    border-radius: var(--radius);
+    padding: 28px 32px;
+    margin-bottom: 32px;
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow);
+  }
+
+  .steps {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 20px;
+    margin-top: 6px;
+  }
+
+  .step {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .step-num {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    background: var(--accent);
+    color: white;
+    font-size: 12px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .step-text {
+    font-size: 13px;
+    color: var(--text-secondary);
+    line-height: 1.6;
+  }
+
+  .step-text strong {
+    color: var(--text-primary);
+    font-weight: 500;
+    display: block;
+    margin-bottom: 2px;
+  }
+
+  /* 提出先フォルダ */
+  .folder-link {
+    background: var(--accent-light);
+    border-radius: var(--radius);
+    padding: 18px 24px;
+    margin-bottom: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border: 1px solid rgba(45,106,79,0.15);
+    text-decoration: none;
+    transition: all 0.2s ease;
+    gap: 16px;
+  }
+
+  .folder-link:hover {
+    background: #d8ede3;
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-hover);
+  }
+
+  .folder-link-left {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .folder-icon {
+    width: 40px; height: 40px;
+    background: var(--accent);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+
+  .folder-info strong {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--accent);
+    display: block;
+  }
+
+  .folder-info span {
+    font-size: 12px;
+    color: var(--text-secondary);
+  }
+
+  .folder-arrow {
+    font-size: 18px;
+    color: var(--accent);
+    flex-shrink: 0;
+  }
+
+  /* スタッフカード */
+  .staff-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 16px;
+    margin-bottom: 32px;
+  }
+
+  .staff-card {
+    background: var(--surface);
+    border-radius: var(--radius);
+    padding: 24px;
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow);
+    transition: all 0.25s ease;
+    text-decoration: none;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .staff-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 4px;
+    height: 100%;
+    background: var(--accent);
+    opacity: 0;
+    transition: opacity 0.2s ease;
+  }
+
+  .staff-card:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-hover);
+    border-color: rgba(45,106,79,0.2);
+  }
+
+  .staff-card:hover::before {
+    opacity: 1;
+  }
+
+  .staff-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .staff-avatar {
+    width: 44px; height: 44px;
+    border-radius: 50%;
+    background: var(--accent-light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--accent);
+    flex-shrink: 0;
+    border: 2px solid rgba(45,106,79,0.15);
+  }
+
+  .staff-name {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text-primary);
+    line-height: 1.3;
+  }
+
+  .staff-name-kana {
+    font-size: 11px;
+    color: var(--text-muted);
+    font-weight: 400;
+  }
+
+  .staff-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    background: var(--accent);
+    color: white;
+    border-radius: 8px;
+    padding: 10px 16px;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    transition: background 0.2s ease;
+  }
+
+  .staff-card:hover .staff-btn {
+    background: #1f4f3a;
+  }
+
+  /* 注意書き */
+  .notice {
+    background: #fffbeb;
+    border: 1px solid #fde68a;
+    border-radius: var(--radius);
+    padding: 16px 20px;
+    font-size: 12.5px;
+    color: #92400e;
+    line-height: 1.7;
+    margin-bottom: 32px;
+  }
+
+  .notice strong {
+    display: block;
+    margin-bottom: 4px;
+    font-weight: 600;
+  }
+
+  /* フッター */
+  footer {
+    text-align: center;
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-top: 20px;
+  }
+
+  @media (max-width: 600px) {
+    header { padding: 28px 20px 24px; }
+    header h1 { font-size: 22px; }
+    .how-to { padding: 20px; }
+    .steps { grid-template-columns: 1fr; }
+    .staff-grid { grid-template-columns: 1fr; }
+    .folder-link { flex-direction: column; align-items: flex-start; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="header-label">社内限定 · Internal Use Only</div>
+    <h1>休暇届提出ポータル</h1>
+    <div class="header-sub">フォームから入力するだけで、PDFが自動で経理担当に提出されます</div>
+  </div>
+</header>
+
+<div class="container">
+
+  <!-- 使い方 -->
+  <div class="section-title">使い方</div>
+  <div class="how-to">
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-text">
+          <strong>自分の名前のフォームを開く</strong>
+          下のカードから自分の名前を選んでフォームを開きます
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-text">
+          <strong>必要事項を入力して送信</strong>
+          シート番号・休暇の種類・日時・事由を入力して送信します
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-text">
+          <strong>自動でPDF化・保存される</strong>
+          送信後、自動でPDFが作成され提出先フォルダに保存されます
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-text">
+          <strong>リンクをLINE WORKSで送る</strong>
+          保存されたPDFのリンクを経理担当にLINE WORKSで送付します
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 提出先フォルダ -->
+  <div class="section-title">提出先フォルダ</div>
+  <a class="folder-link" href="https://drive.google.com/drive/folders/1M70BbyEd4J9c0Ub3B7EJidpV5v1HH4Vy?usp=drive_link" target="_blank">
+    <div class="folder-link-left">
+      <div class="folder-icon">📁</div>
+      <div class="folder-info">
+        <strong>休暇届提出フォルダ</strong>
+        <span>Google Drive · 月別フォルダに自動で保存されます</span>
+      </div>
+    </div>
+    <div class="folder-arrow">→</div>
+  </a>
+
+  <!-- スタッフフォーム -->
+  <div class="section-title">スタッフ別フォーム</div>
+  <div class="staff-grid">
+
+    <a class="staff-card" href="https://forms.gle/ADhx9yeViJ8unw5U7" target="_blank">
+      <div class="staff-header">
+        <div class="staff-avatar">高</div>
+        <div>
+          <div class="staff-name">高橋 友介</div>
+          <div class="staff-name-kana">Takahashi Yusuke</div>
+        </div>
+      </div>
+      <div class="staff-btn">フォームを開く →</div>
+    </a>
+
+    <a class="staff-card" href="https://forms.gle/e1QW33avATemVRC36" target="_blank">
+      <div class="staff-header">
+        <div class="staff-avatar">安</div>
+        <div>
+          <div class="staff-name">安田 天地</div>
+          <div class="staff-name-kana">Yasuda Tenchi</div>
+        </div>
+      </div>
+      <div class="staff-btn">フォームを開く →</div>
+    </a>
+
+    <a class="staff-card" href="https://forms.gle/aMJNUsfNBfmPUrZi9" target="_blank">
+      <div class="staff-header">
+        <div class="staff-avatar">鴨</div>
+        <div>
+          <div class="staff-name">鴨川 弥矢</div>
+          <div class="staff-name-kana">Kamogawa Miya</div>
+        </div>
+      </div>
+      <div class="staff-btn">フォームを開く →</div>
+    </a>
+
+    <a class="staff-card" href="https://forms.gle/HBRkWjBteax1Kcck9" target="_blank">
+      <div class="staff-header">
+        <div class="staff-avatar">神</div>
+        <div>
+          <div class="staff-name">神田 由美</div>
+          <div class="staff-name-kana">Kanda Yumi</div>
+        </div>
+      </div>
+      <div class="staff-btn">フォームを開く →</div>
+    </a>
+
+    <a class="staff-card" href="https://forms.gle/HySg8Ho14wvvkLoE8" target="_blank">
+      <div class="staff-header">
+        <div class="staff-avatar">野</div>
+        <div>
+          <div class="staff-name">野畑 優衣</div>
+          <div class="staff-name-kana">Nohata Yui</div>
+        </div>
+      </div>
+      <div class="staff-btn">フォームを開く →</div>
+    </a>
+
+    <a class="staff-card" href="https://forms.gle/4teSdnctk2UxPWqf7" target="_blank">
+      <div class="staff-header">
+        <div class="staff-avatar">川</div>
+        <div>
+          <div class="staff-name">川畑 彩子</div>
+          <div class="staff-name-kana">Kawabata Ayako</div>
+        </div>
+      </div>
+      <div class="staff-btn">フォームを開く →</div>
+    </a>
+
+  </div>
+
+  <!-- 注意書き -->
+  <div class="notice">
+    <strong>⚠️ ご注意</strong>
+    必ず自分の名前のフォームから提出してください。他のスタッフのフォームから提出すると、別のスプレッドシートに反映されてしまいます。フォームはスマートフォン・PCどちらからでも使用できます。
+  </div>
+
+  <footer>社内限定ページ · 休暇届提出ポータル</footer>
+
+</div>
+</body>
+</html>
